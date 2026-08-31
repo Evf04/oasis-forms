@@ -1,0 +1,49 @@
+---
+// src/components/Footer.astro
+---
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="legal-disclaimer">
+      * La carga del comprobante es válida únicamente para compras realizadas en tiendas oficiales adidas Originals Malabia y adidas Originals Unicenter. La validación del ticket está sujeta a verificación de autenticidad y fecha de emisión. La participación es personal e intransferible y se confirmará mediante DNI físico presentado en sucursal. Válido hasta agotar cupos disponibles de la colección. En caso de inconsistencia en los datos o comprobante ilegible, el registro podrá ser desestimado automáticamente.
+    </p>
+    <div class="copyright">
+      <span>© {new Date().getFullYear()} adidas Argentina & Oasis Forever. Todos los derechos reservados.</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    width: 100%;
+    margin-top: clamp(2.5rem, 6vw, 4.5rem);
+    padding-top: clamp(1.75rem, 4vw, 2.5rem);
+    padding-left: clamp(1rem, 3vw, 1.5rem);
+    padding-right: clamp(1rem, 3vw, 1.5rem);
+    padding-bottom: max(2.5rem, calc(1.5rem + env(safe-area-inset-bottom, 0px)));
+    border-top: 1px solid var(--border-subtle);
+    background-color: var(--bg-primary);
+  }
+
+  .footer-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    text-align: center;
+  }
+
+  .legal-disclaimer {
+    font-size: clamp(0.68rem, 1.6vw, 0.74rem);
+    color: var(--text-muted);
+    line-height: 1.65;
+    letter-spacing: 0.01em;
+  }
+
+  .copyright {
+    font-size: clamp(0.66rem, 1.5vw, 0.72rem);
+    color: #444444;
+    letter-spacing: 0.04em;
+  }
+</style>

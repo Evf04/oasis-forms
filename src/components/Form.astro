@@ -1,0 +1,623 @@
+---
+import StoreSelector from "./StoreSelector.astro";
+import TicketUpload from "./TicketUpload.astro";
+---
+
+<div class="campaign-wrapper">
+  <!-- Top Brand Logos Banner -->
+  <div class="top-logos-banner">
+    <div class="logo-item adidas-wrap">
+      <img
+        src="/images/adidas.svg"
+        alt="adidas Originals"
+        width="240"
+        height="165"
+        class="brand-logo-img adidas-logo"
+        loading="eager"
+      />
+    </div>
+    <div class="logo-divider" aria-hidden="true"></div>
+    <div class="logo-item oasis-wrap">
+      <img
+        src="/images/oasis.svg"
+        alt="Oasis"
+        width="370"
+        height="148"
+        class="brand-logo-img oasis-logo"
+        loading="eager"
+      />
+    </div>
+  </div>
+
+  <!-- Main Form Card -->
+  <form id="oasis-ticket-form" class="main-form" method="POST" enctype="multipart/form-data">
+    <!-- Store Selection -->
+    <StoreSelector />
+
+    <!-- Personal Data Section -->
+    <div class="form-section">
+      <div class="section-title-wrap">
+        <h3 class="section-title">COMPLETÁ TUS DATOS</h3>
+      </div>
+
+      <div class="inputs-grid">
+        <!-- Nombre -->
+        <div class="form-group">
+          <label for="nombre" class="form-label">Nombre</label>
+          <input
+            type="text"
+            id="nombre"
+            name="nombre"
+            required
+            placeholder="Nombre"
+            class="form-input"
+            autocomplete="name"
+          />
+        </div>
+
+        <!-- DNI -->
+        <div class="form-group">
+          <label for="dni" class="form-label">DNI (sin puntos)</label>
+          <input
+            type="text"
+            id="dni"
+            name="dni"
+            required
+            pattern="[0-9]{7,9}"
+            placeholder="DNI"
+            class="form-input"
+            inputmode="numeric"
+          />
+        </div>
+
+        <!-- Teléfono -->
+        <div class="form-group">
+          <label for="telefono" class="form-label">Teléfono</label>
+          <input
+            type="tel"
+            id="telefono"
+            name="telefono"
+            required
+            placeholder="Teléfono"
+            class="form-input"
+            autocomplete="tel"
+          />
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email" class="form-label">Mail</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="Email"
+            class="form-input"
+            autocomplete="email"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Ticket Upload Section -->
+    <TicketUpload />
+
+    <!-- Agreement & Submission -->
+    <div class="submission-section">
+      <label class="checkbox-container" for="terms">
+        <input type="checkbox" id="terms" name="terms" required class="custom-checkbox" />
+        <span class="checkbox-label">
+          Acepto los <a href="#" class="terms-link">Términos y Condiciones</a> y Políticas de Privacidad
+        </span>
+      </label>
+
+      <button type="submit" class="btn-submit" id="btn-submit">
+        <span>CONFIRMAR REGISTRO</span>
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" class="btn-arrow" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+    </div>
+  </form>
+
+  <!-- Success Confirmation Modal / Card (Shown on submit) -->
+  <div class="confirmation-modal" id="confirmation-modal" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-card">
+      <div class="modal-header-logos">
+        <img src="/images/adidas-black.svg" alt="adidas Originals" width="90" height="62" class="modal-logo-img" />
+        <span class="modal-divider"></span>
+        <img src="/images/oasis-black.svg" alt="Oasis" width="145" height="58" class="modal-logo-img" />
+      </div>
+
+      <div class="modal-body">
+        <div class="success-badge">
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#000000" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <h2 id="modal-title" class="modal-title">¡Tu ticket ha sido cargado con éxito!</h2>
+        <p class="modal-message">
+          Te enviaremos un mail con la confirmación y los detalles de validación.
+        </p>
+
+        <div class="modal-summary" id="modal-summary">
+          <!-- Populated by JS -->
+        </div>
+
+        <button type="button" class="btn-modal-close" id="btn-modal-close">
+          Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .campaign-wrapper {
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 clamp(1rem, 3.5vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Top Brand Logos Banner - High impact, commanding scale */
+  .top-logos-banner {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(2rem, 5.5vw, 4.5rem);
+    padding: clamp(2rem, 5vw, 4.5rem) 1rem clamp(2.5rem, 5.5vw, 4.5rem);
+  }
+
+  .logo-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .brand-logo-img {
+    height: auto;
+    object-fit: contain;
+    display: block;
+    transition: transform var(--transition-normal);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .brand-logo-img:hover {
+      transform: scale(1.03);
+    }
+  }
+
+  .adidas-logo {
+    width: clamp(125px, 18vw, 230px);
+  }
+
+  .oasis-logo {
+    width: clamp(195px, 28vw, 360px);
+  }
+
+  .logo-divider {
+    width: 3px;
+    height: clamp(65px, 9.5vw, 115px);
+    background-color: #ffffff;
+    opacity: 0.95;
+  }
+
+  /* Hero Section (Preserved for future use) */
+  .hero-section {
+    text-align: center;
+    margin-bottom: clamp(1.75rem, 4.5vw, 2.75rem);
+    max-width: 680px;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5.5vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    margin-bottom: clamp(0.75rem, 2vw, 1.25rem);
+  }
+
+  .hero-title-accent {
+    letter-spacing: 0.04em;
+    display: inline-block;
+  }
+
+  .hero-description {
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  /* Main Form */
+  .main-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Form Section */
+  .form-section {
+    width: 100%;
+    margin-bottom: clamp(2rem, 4.5vw, 3rem);
+  }
+
+  .section-title-wrap {
+    text-align: center;
+    margin-bottom: clamp(1.25rem, 3vw, 1.85rem);
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 3vw, 1.85rem);
+    letter-spacing: 0.03em;
+    color: var(--text-primary);
+    text-transform: uppercase;
+  }
+
+  /* Grid of Inputs: 1x4 on Desktop (default), 2x2 on Tablet, 4x1 on Phone */
+  .inputs-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(0.85rem, 2vw, 1.5rem);
+  }
+
+  @media (max-width: 1024px) {
+    .inputs-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: clamp(1rem, 2.5vw, 1.5rem);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .inputs-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .form-label {
+    font-family: var(--font-display);
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    letter-spacing: 0.03em;
+    color: var(--text-primary);
+    text-transform: uppercase;
+  }
+
+  .form-input {
+    width: 100%;
+    background-color: #000000;
+    border: 2.5px solid #777777;
+    border-radius: var(--radius-md);
+    padding: 0.95rem 1.15rem;
+    min-height: 56px;
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+  }
+
+  .form-input::placeholder {
+    color: #888888;
+    font-family: var(--font-sans);
+    font-size: 0.98rem;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .form-input:hover {
+      border-color: #bbbbbb;
+    }
+  }
+
+  .form-input:focus {
+    border-color: var(--accent-white);
+    background-color: #000000;
+    box-shadow: 0 0 0 1.5px var(--accent-white);
+    outline: none;
+  }
+
+  /* Submission Section */
+  .submission-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+    gap: clamp(1.25rem, 3vw, 1.75rem);
+    text-align: center;
+    width: 100%;
+  }
+
+  .checkbox-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+    cursor: pointer;
+    user-select: none;
+    min-height: var(--min-touch-target);
+    padding: 0.35rem 0.65rem;
+  }
+
+  .custom-checkbox {
+    width: 22px;
+    height: 22px;
+    accent-color: #ffffff;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .checkbox-label {
+    font-size: clamp(0.88rem, 1.6vw, 1rem);
+    color: var(--text-secondary);
+    text-align: left;
+  }
+
+  .terms-link {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .terms-link:hover {
+      color: #cccccc;
+    }
+  }
+
+  .btn-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    background-color: var(--accent-white);
+    color: var(--text-inverted);
+    border: none;
+    border-radius: var(--radius-full);
+    min-height: 58px;
+    padding: 1.15rem clamp(2.5rem, 6vw, 4.5rem);
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 2.2vw, 1.35rem);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: all var(--transition-normal);
+    box-shadow: 0 4px 24px rgba(255, 255, 255, 0.18);
+    max-width: 480px;
+    width: 100%;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn-submit:hover {
+      background-color: #e5e5e5;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(255, 255, 255, 0.3);
+    }
+    .btn-submit:hover .btn-arrow {
+      transform: translateX(4px);
+    }
+  }
+
+  .btn-submit:active {
+    transform: scale(0.98);
+  }
+
+  .btn-arrow {
+    transition: transform var(--transition-fast);
+    flex-shrink: 0;
+  }
+
+  /* Modal Confirmation */
+  .confirmation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    overflow-y: auto;
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(8px);
+  }
+
+  .modal-card {
+    position: relative;
+    z-index: 10;
+    background: #ffffff;
+    color: #000000;
+    border-radius: var(--radius-lg);
+    max-width: min(520px, calc(100vw - 2rem));
+    width: 100%;
+    max-height: calc(100dvh - 3rem);
+    overflow-y: auto;
+    padding: clamp(2rem, 4vw, 2.75rem) clamp(1.5rem, 3.5vw, 2.25rem);
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9);
+    animation: modalAppear 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes modalAppear {
+    from {
+      opacity: 0;
+      transform: scale(0.92) translateY(15px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .modal-header-logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-logo-img {
+    height: auto;
+    object-fit: contain;
+  }
+
+  .modal-divider {
+    width: 1.5px;
+    height: 32px;
+    background: #cccccc;
+  }
+
+  .success-badge {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #e8f7ee;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .modal-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.45rem, 3.5vw, 1.85rem);
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+    color: #000000;
+  }
+
+  .modal-message {
+    font-size: clamp(0.92rem, 2vw, 1.05rem);
+    color: #555555;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-summary {
+    background: #f4f4f4;
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem;
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+    color: #333333;
+    text-align: left;
+    margin-bottom: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .btn-modal-close {
+    width: 100%;
+    min-height: 52px;
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-full);
+    padding: 0.95rem;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn-modal-close:hover {
+      background: #222222;
+    }
+  }
+
+  .btn-modal-close:active {
+    transform: scale(0.98);
+  }
+
+  @media (max-width: 600px) {
+    .btn-submit {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  // Form submission handler with visual confirmation
+  function setupFormHandler() {
+    const form = document.getElementById('oasis-ticket-form') as HTMLFormElement | null;
+    const modal = document.getElementById('confirmation-modal');
+    const modalSummary = document.getElementById('modal-summary');
+    const btnClose = document.getElementById('btn-modal-close');
+    const backdrop = document.getElementById('modal-backdrop');
+
+    if (!form || !modal) return;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Check validity
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      // Collect form info for summary display
+      const formData = new FormData(form);
+      const nombre = formData.get('nombre') as string;
+      const tienda = (formData.get('tienda') as string) === 'malabia' ? 'Originals Malabia' : 'Originals Unicenter';
+      const ticketFile = formData.get('ticket') as File;
+      const ticketName = ticketFile ? ticketFile.name : 'Comprobante adjunto';
+
+      if (modalSummary) {
+        modalSummary.innerHTML = `
+          <div><strong>Titular:</strong> ${nombre || 'Registrado'}</div>
+          <div><strong>Tienda seleccionada:</strong> ${tienda}</div>
+          <div><strong>Comprobante:</strong> ${ticketName}</div>
+        `;
+      }
+
+      // Display confirmation modal
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    });
+
+    function closeModal() {
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    }
+
+    btnClose?.addEventListener('click', closeModal);
+    backdrop?.addEventListener('click', closeModal);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupFormHandler);
+  } else {
+    setupFormHandler();
+  }
+</script>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="105.02834mm"
+   height="73.235954mm"
+   viewBox="0 0 105.02834 73.235954"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   sodipodi:docname="adidas.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.71891835"
+     inkscape:cx="139.79334"
+     inkscape:cy="411.03416"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath5">
+      <path
+         d="M 0,3012.44 H 1920 V 0 H 0 Z"
+         transform="translate(-802.48022,-2625.9293)"
+         id="path5" />
+    </clipPath>
+  </defs>
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-68.262502,-39.687501)">
+    <path
+       id="path4"
+       d="m 0,0 h -255.595 c 1.775,-3.537 5.521,-8.548 8.479,-11.49 H -8.48 C -5.522,-8.548 -1.775,-3.537 0,0 m -148.188,-70.976 c 0.46,4.454 0.108,13.638 -1.961,25.155 h -62.705 c 26.34,-18.11 55.367,-24.799 64.666,-25.155 m -24.407,82.397 c -0.039,0.058 -0.076,0.116 -0.115,0.174 -24.611,36.43 -66.534,62.922 -103.641,65.088 -1.709,-20.594 3.819,-43.718 14.665,-65.262 z m 82.703,0 c 5.321,46.094 -9.84,96.044 -37.906,123.432 -28.066,-27.388 -43.226,-77.338 -37.905,-123.432 z M 20.755,76.683 C -16.352,74.517 -58.275,48.025 -82.885,11.595 -82.924,11.537 -82.961,11.479 -83,11.421 H 6.091 C 16.937,32.965 22.465,56.089 20.755,76.683 M -127.798,-72.745 c 4.027,3.774 11.614,13.421 19.013,26.924 h -38.025 c 7.398,-13.503 14.986,-23.15 19.012,-26.924 m 110.691,49.834 h -221.382 c 3.527,-4.209 9.027,-9.128 12.841,-11.489 h 195.701 c 3.814,2.361 9.313,7.28 12.84,11.489 m -88.339,-22.91 h 62.705 c -26.34,-18.11 -55.368,-24.799 -64.666,-25.155 -0.46,4.454 -0.109,13.638 1.961,25.155"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       transform="matrix(0.35277776,0,0,-0.35277776,165.86091,87.26064)"
+       clip-path="url(#clipPath5)" />
+  </g>
+</svg>

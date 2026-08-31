@@ -1,0 +1,139 @@
+/* Local fonts from public/fonts */
+@font-face {
+  font-family: 'adidasFG';
+  src: url('/fonts/adidasFG-CompressedBold.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'adidasFG-CompressedBold';
+  src: url('/fonts/adidasFG-CompressedBold.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ArialCustom';
+  src: url('/fonts/Arial.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg-primary: #000000;
+  --bg-surface: #0a0a0a;
+  --bg-surface-elevated: #141414;
+  --bg-surface-hover: #1a1a1a;
+  --bg-input: #080808;
+
+  --text-primary: #ffffff;
+  --text-secondary: #a3a3a3;
+  --text-muted: #666666;
+  --text-inverted: #000000;
+
+  --border-subtle: #222222;
+  --border-default: #333333;
+  --border-hover: #666666;
+  --border-focus: #ffffff;
+
+  --accent-white: #ffffff;
+  --accent-glow: rgba(255, 255, 255, 0.08);
+
+  --font-display: 'adidasFG', 'adidasFG-CompressedBold', sans-serif;
+  --font-sans: 'ArialCustom', 'Arial', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  --transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 250ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  --min-touch-target: 44px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* Custom Scrollbar for desktop */
+@media (pointer: fine) {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2a2a2a;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #444444;
+  }
+}
+
+/* Selection */
+::selection {
+  background: #ffffff;
+  color: #000000;
+}
+
+/* Inputs on Mobile: 16px font size to prevent iOS Safari auto-zoom */
+input, select, textarea {
+  font-size: 16px;
+  font-family: var(--font-sans);
+}
+
+button {
+  font-family: inherit;
+  user-select: none;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--accent-white);
+  outline-offset: 2px;
+}
+
+/* Touch-friendly active states */
+@media (hover: none) and (pointer: coarse) {
+  button:active, .store-card:active, .btn-action:active {
+    opacity: 0.85;
+    transform: scale(0.98);
+  }
+}
