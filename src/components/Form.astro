@@ -478,7 +478,7 @@ import TicketUpload from "./TicketUpload.astro";
     z-index: 10;
     background: #ffffff;
     color: #000000;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     max-width: min(520px, calc(100vw - 2rem));
     width: 100%;
     max-height: calc(100dvh - 3rem);
@@ -547,7 +547,7 @@ import TicketUpload from "./TicketUpload.astro";
 
   .modal-summary {
     background: #f4f4f4;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     padding: 1rem 1.25rem;
     font-size: clamp(0.85rem, 1.8vw, 0.95rem);
     color: #333333;
@@ -769,14 +769,13 @@ import TicketUpload from "./TicketUpload.astro";
 
         const storeNameFormatted = tienda === 'malabia' ? 'Originals Malabia' : 'Originals Unicenter';
         const ticketDisplayName = ticketFile.name;
-        const sizeMb = (ticketFile.size / (1024 * 1024)).toFixed(2);
 
         if (modalSummary) {
           modalSummary.innerHTML = `
             <div><strong>Titular:</strong> ${nombre}</div>
             <div><strong>DNI:</strong> ${dni}</div>
             <div><strong>Tienda seleccionada:</strong> ${storeNameFormatted}</div>
-            <div><strong>Comprobante:</strong> ${ticketDisplayName} (${sizeMb} MB)</div>
+            <div><strong>Comprobante:</strong> ${ticketDisplayName}</div>
           `;
         }
 
@@ -785,14 +784,24 @@ import TicketUpload from "./TicketUpload.astro";
           modal.style.display = 'flex';
           document.body.style.overflow = 'hidden';
         }
-
-        // Reset form
-        form.reset();
-        validateForm();
       } catch (err: any) {
-        console.error('[Registration Error]', err);
-        const errorMsg = err.message || 'Error al conectar con la base de datos. Verifica tu conexión e intenta nuevamente.';
-        showFormError(errorMsg);
+        console.error('[Registration Submission Error]', err);
+
+        const rawMsg = (err?.message || '').toLowerCase();
+
+        // Show friendly duplicity errors for user fields
+        if (rawMsg.includes('dni')) {
+          showFormError('Este DNI ya se encuentra registrado.');
+        } else if (rawMsg.includes('teléfono') || rawMsg.includes('telefono')) {
+          showFormError('Este número de teléfono ya se encuentra registrado.');
+        } else if (rawMsg.includes('email') || rawMsg.includes('correo')) {
+          showFormError('Este correo electrónico ya se encuentra registrado.');
+        } else if (rawMsg.includes('contacto') || rawMsg.includes('duplicado')) {
+          showFormError('Ya existe un registro con estos datos de contacto.');
+        } else {
+          // Technical / backend error: clean generic message
+          showFormError('Ocurrió un error al procesar tu solicitud. Por favor, intentá nuevamente.');
+        }
       } finally {
         btnSubmit.innerHTML = originalBtnHtml;
         validateForm();
@@ -804,6 +813,8 @@ import TicketUpload from "./TicketUpload.astro";
         modal.style.display = 'none';
         document.body.style.overflow = '';
       }
+      // Refresh the page after confirmation
+      window.location.reload();
     }
 
     btnClose?.addEventListener('click', closeModal);
