@@ -166,26 +166,28 @@ import TicketUpload from "./TicketUpload.astro";
     align-items: center;
   }
 
-  /* Top Brand Logos Banner - High impact, commanding scale */
+  /* Top Brand Logos Banner - Fluid scaling across all screen sizes */
   .top-logos-banner {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: clamp(2rem, 5.5vw, 4.5rem);
-    padding: clamp(2rem, 5vw, 4.5rem) 1rem clamp(2.5rem, 5.5vw, 4.5rem);
+    gap: clamp(1.25rem, 4vw, 4.5rem);
+    padding: clamp(1.5rem, 4vw, 4.5rem) 0.5rem clamp(2rem, 5vw, 4.5rem);
   }
 
   .logo-item {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 1;
   }
 
   .brand-logo-img {
     height: auto;
     object-fit: contain;
     display: block;
+    max-width: 100%;
     transition: transform var(--transition-normal);
   }
 
@@ -196,18 +198,19 @@ import TicketUpload from "./TicketUpload.astro";
   }
 
   .adidas-logo {
-    width: clamp(125px, 18vw, 230px);
+    width: clamp(80px, 18vw, 230px);
   }
 
   .oasis-logo {
-    width: clamp(195px, 28vw, 360px);
+    width: clamp(120px, 28vw, 360px);
   }
 
   .logo-divider {
-    width: 3px;
-    height: clamp(65px, 9.5vw, 115px);
+    width: clamp(2px, 0.35vw, 3px);
+    height: clamp(44px, 9.5vw, 115px);
     background-color: #ffffff;
     opacity: 0.95;
+    flex-shrink: 0;
   }
 
   /* Hero Section (Preserved for future use) */
@@ -387,8 +390,8 @@ import TicketUpload from "./TicketUpload.astro";
     background-color: var(--accent-white);
     color: var(--text-inverted);
     border: none;
-    border-radius: var(--radius-full);
-    min-height: 58px;
+    border-radius: var(--radius-md);
+    min-height: 56px;
     padding: 1.15rem clamp(2.5rem, 6vw, 4.5rem);
     font-family: var(--font-display);
     font-size: clamp(1.15rem, 2.2vw, 1.35rem);
@@ -538,7 +541,7 @@ import TicketUpload from "./TicketUpload.astro";
     background: #000000;
     color: #ffffff;
     border: none;
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-md);
     padding: 0.95rem;
     font-family: var(--font-display);
     font-size: 1.1rem;
