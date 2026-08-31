@@ -633,13 +633,13 @@ import TicketUpload from "./TicketUpload.astro";
         return false;
       }
 
-      // 6. Check Ticket (must have attached file <= 3MB and allowed format)
+      // 6. Check Ticket (must have attached file <= 15MB and allowed format)
       const file = fileInput?.files?.[0];
       if (!file) {
         if (btnSubmit) btnSubmit.disabled = true;
         return false;
       }
-      if (file.size > 3 * 1024 * 1024) {
+      if (file.size > 15 * 1024 * 1024) {
         if (btnSubmit) btnSubmit.disabled = true;
         return false;
       }
