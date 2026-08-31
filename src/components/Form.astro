@@ -112,7 +112,7 @@ import TicketUpload from "./TicketUpload.astro";
         </span>
       </label>
 
-      <button type="submit" class="btn-submit" id="btn-submit">
+      <button type="submit" class="btn-submit" id="btn-submit" disabled>
         <span>CONFIRMAR REGISTRO</span>
       </button>
     </div>
@@ -400,15 +400,22 @@ import TicketUpload from "./TicketUpload.astro";
     width: 100%;
   }
 
+  .btn-submit:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: none;
+  }
+
   @media (hover: hover) and (pointer: fine) {
-    .btn-submit:hover {
+    .btn-submit:not(:disabled):hover {
       background-color: #e5e5e5;
       transform: translateY(-2px);
       box-shadow: 0 8px 32px rgba(255, 255, 255, 0.3);
     }
   }
 
-  .btn-submit:active {
+  .btn-submit:not(:disabled):active {
     transform: scale(0.98);
   }
 
@@ -600,6 +607,18 @@ import TicketUpload from "./TicketUpload.astro";
         modal.style.display = 'none';
         document.body.style.overflow = '';
       }
+    }
+
+    const termsCheckbox = document.getElementById('terms') as HTMLInputElement | null;
+    const btnSubmit = document.getElementById('btn-submit') as HTMLButtonElement | null;
+
+    // Synchronize disabled state with terms checkbox
+    if (termsCheckbox && btnSubmit) {
+      btnSubmit.disabled = !termsCheckbox.checked;
+
+      termsCheckbox.addEventListener('change', () => {
+        btnSubmit.disabled = !termsCheckbox.checked;
+      });
     }
 
     btnClose?.addEventListener('click', closeModal);
