@@ -1,0 +1,502 @@
+---
+// src/pages/admin/login.astro
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="OASIS | Admin Login" description="Acceso al panel de administración de tickets OASIS | Adidas">
+  <main class="login-page">
+    <div class="login-container">
+      <!-- Top Brand Logos Banner -->
+      <div class="top-logos-banner">
+        <div class="logo-item adidas-wrap">
+          <img
+            src="/images/adidas.svg"
+            alt="adidas Originals"
+            width="160"
+            height="110"
+            class="brand-logo-img adidas-logo"
+            loading="eager"
+          />
+        </div>
+        <div class="logo-divider" aria-hidden="true"></div>
+        <div class="logo-item oasis-wrap">
+          <img
+            src="/images/oasis.svg"
+            alt="Oasis"
+            width="240"
+            height="96"
+            class="brand-logo-img oasis-logo"
+            loading="eager"
+          />
+        </div>
+      </div>
+
+      <!-- Login Card -->
+      <div class="login-card">
+        <div class="card-header">
+          <div class="admin-badge">ADMIN PANEL</div>
+          <h1 class="card-title">INICIAR SESIÓN</h1>
+          <p class="card-subtitle">Ingresá tus credenciales para acceder a la gestión de comprobantes</p>
+        </div>
+
+        <form id="admin-login-form" class="login-form" autocomplete="off">
+          <!-- Dynamic Error Alert -->
+          <div class="error-banner" id="error-banner" style="display: none;" role="alert">
+            <span id="error-text" class="error-text">Usuario o contraseña incorrectos.</span>
+          </div>
+
+          <!-- Username -->
+          <div class="form-group">
+            <label for="admin-user" class="form-label">Usuario</label>
+            <div class="input-wrapper">
+              <input
+                type="text"
+                id="admin-user"
+                name="username"
+                required
+                placeholder="Usuario administrador"
+                class="form-input"
+                autocomplete="username"
+              />
+              <span class="input-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label for="admin-pass" class="form-label">Contraseña</label>
+            <div class="input-wrapper">
+              <input
+                type="password"
+                id="admin-pass"
+                name="password"
+                required
+                placeholder="••••••••"
+                class="form-input"
+                autocomplete="current-password"
+              />
+              <button
+                type="button"
+                id="toggle-password"
+                class="btn-toggle-password"
+                title="Mostrar u ocultar contraseña"
+                aria-label="Mostrar u ocultar contraseña"
+              >
+                <svg id="eye-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn-submit" id="btn-login">
+            <span>INGRESAR AL PANEL</span>
+          </button>
+        </form>
+
+        <div class="card-footer">
+          <a href="/" class="back-link">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Volver al formulario público</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .login-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1.5rem, 4vw, 3rem) 1rem;
+    background-color: var(--bg-primary);
+  }
+
+  .login-container {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Logos Banner */
+  .top-logos-banner {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .logo-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .brand-logo-img {
+    height: auto;
+    object-fit: contain;
+    display: block;
+    max-width: 100%;
+  }
+
+  .adidas-logo {
+    width: clamp(70px, 15vw, 130px);
+  }
+
+  .oasis-logo {
+    width: clamp(110px, 22vw, 195px);
+  }
+
+  .logo-divider {
+    width: 3.5px;
+    height: clamp(40px, 9vw, 85px);
+    background-color: #ffffff;
+    opacity: 1;
+    flex-shrink: 0;
+  }
+
+  /* Card */
+  .login-card {
+    width: 100%;
+    background-color: #000000;
+    border: 2px solid #333333;
+    border-radius: var(--radius-lg);
+    padding: clamp(2rem, 5vw, 2.75rem) clamp(1.5rem, 4vw, 2.25rem);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
+  }
+
+  .card-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .admin-badge {
+    display: inline-block;
+    background: #1a1a1a;
+    color: #ffffff;
+    border: 1px solid #444444;
+    padding: 0.3rem 0.85rem;
+    border-radius: 4px;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+
+  .card-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3.5vw, 2.1rem);
+    letter-spacing: 0.04em;
+    color: var(--text-primary);
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .card-subtitle {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+  }
+
+  .error-banner {
+    display: block;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    animation: shake 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+
+  @keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+    40%, 60% { transform: translate3d(3px, 0, 0); }
+  }
+
+  .error-text {
+    color: #ff4d4f;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    font-weight: 500;
+    text-align: center;
+    display: block;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-label {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    letter-spacing: 0.03em;
+    color: var(--text-primary);
+    text-transform: uppercase;
+  }
+
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .form-input {
+    width: 100%;
+    background-color: #000000;
+    border: 2px solid #666666;
+    border-radius: var(--radius-md);
+    padding: 0.95rem 3rem 0.95rem 1.15rem;
+    min-height: 54px;
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+  }
+
+  .form-input::placeholder {
+    color: #777777;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .form-input:hover {
+      border-color: #aaaaaa;
+    }
+  }
+
+  .form-input:focus {
+    border-color: var(--accent-white);
+    box-shadow: 0 0 0 1.5px var(--accent-white);
+    outline: none;
+  }
+
+  .input-icon {
+    position: absolute;
+    right: 1.15rem;
+    color: #777777;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-toggle-password {
+    position: absolute;
+    right: 0.75rem;
+    background: transparent;
+    border: none;
+    color: #888888;
+    cursor: pointer;
+    min-width: 40px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: color var(--transition-fast);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn-toggle-password:hover {
+      color: #ffffff;
+    }
+  }
+
+  .btn-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background-color: var(--accent-white);
+    color: var(--text-inverted);
+    border: none;
+    border-radius: var(--radius-md);
+    min-height: 54px;
+    padding: 1rem 2rem;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: all var(--transition-normal);
+    box-shadow: 0 4px 24px rgba(255, 255, 255, 0.18);
+    width: 100%;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn-submit:hover {
+      background-color: #e5e5e5;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  .btn-submit:active {
+    transform: scale(0.98);
+  }
+
+  .btn-submit:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .card-footer {
+    text-align: center;
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #222222;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .back-link:hover {
+      color: var(--text-primary);
+    }
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+</style>
+
+<script>
+  function setupLogin() {
+    const form = document.getElementById('admin-login-form') as HTMLFormElement | null;
+    const userInput = document.getElementById('admin-user') as HTMLInputElement | null;
+    const passInput = document.getElementById('admin-pass') as HTMLInputElement | null;
+    const btnSubmit = document.getElementById('btn-login') as HTMLButtonElement | null;
+    const errorBanner = document.getElementById('error-banner');
+    const errorText = document.getElementById('error-text');
+    const togglePassBtn = document.getElementById('toggle-password');
+    const eyeIcon = document.getElementById('eye-icon');
+
+    if (!form || !userInput || !passInput || !btnSubmit) return;
+
+    // Check if already authenticated
+    if (sessionStorage.getItem('oasis_admin_authenticated') === 'true') {
+      window.location.href = '/admin/dashboard';
+      return;
+    }
+
+    // Toggle password visibility
+    togglePassBtn?.addEventListener('click', () => {
+      if (passInput.type === 'password') {
+        passInput.type = 'text';
+        if (eyeIcon) {
+          eyeIcon.innerHTML = `
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+          `;
+        }
+      } else {
+        passInput.type = 'password';
+        if (eyeIcon) {
+          eyeIcon.innerHTML = `
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          `;
+        }
+      }
+    });
+
+    function showError(msg: string) {
+      if (errorBanner && errorText) {
+        errorText.textContent = msg;
+        errorBanner.style.display = 'flex';
+      }
+    }
+
+    function hideError() {
+      if (errorBanner) {
+        errorBanner.style.display = 'none';
+      }
+    }
+
+    userInput.addEventListener('input', hideError);
+    passInput.addEventListener('input', hideError);
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      hideError();
+
+      const enteredUser = userInput.value.trim();
+      const enteredPass = passInput.value;
+
+      // Expected credentials from environment
+      const expectedUser = import.meta.env.PUBLIC_ADMIN_USER || 'admin';
+      const expectedPass = import.meta.env.PUBLIC_ADMIN_PASS || 'oasis2025';
+
+      btnSubmit.disabled = true;
+      const originalHtml = btnSubmit.innerHTML;
+      btnSubmit.innerHTML = `
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2.5" style="animation: spin 0.8s linear infinite;">
+          <circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"></circle>
+        </svg>
+        <span>VERIFICANDO...</span>
+      `;
+
+      setTimeout(() => {
+        if (enteredUser === expectedUser && enteredPass === expectedPass) {
+          // Authentication successful
+          sessionStorage.setItem('oasis_admin_authenticated', 'true');
+          sessionStorage.setItem('oasis_admin_user', enteredUser);
+          sessionStorage.setItem('oasis_admin_login_at', new Date().toISOString());
+
+          window.location.href = '/admin/dashboard';
+        } else {
+          // Authentication failed
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = originalHtml;
+          showError('Usuario o contraseña incorrectos. Verificá tus credenciales.');
+          passInput.value = '';
+          passInput.focus();
+        }
+      }, 400);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupLogin);
+  } else {
+    setupLogin();
+  }
+</script>

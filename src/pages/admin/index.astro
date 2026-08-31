@@ -1,0 +1,19 @@
+---
+// src/pages/admin/index.astro
+// Automatic router redirect to /admin/dashboard
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="0;url=/admin/dashboard" />
+  <title>Redirigiendo a Dashboard...</title>
+  <script is:inline>
+    window.location.replace('/admin/dashboard');
+  </script>
+</head>
+<body style="background: #000000; color: #ffffff; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif;">
+  <p>Redirigiendo al panel de administración...</p>
+</body>
+</html>

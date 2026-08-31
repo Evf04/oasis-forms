@@ -116,6 +116,11 @@ import TicketUpload from "./TicketUpload.astro";
         </span>
       </label>
 
+      <!-- Dynamic Error Alert Banner -->
+      <div class="form-error-banner" id="form-error-banner" style="display: none;" role="alert">
+        <span id="form-error-text" class="error-text"></span>
+      </div>
+
       <button type="submit" class="btn-submit" id="btn-submit" disabled>
         <span>CONFIRMAR REGISTRO</span>
       </button>
@@ -383,6 +388,24 @@ import TicketUpload from "./TicketUpload.astro";
     }
   }
 
+  .form-error-banner {
+    display: block;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .error-text {
+    color: #ff4d4f;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    font-weight: 500;
+    text-align: center;
+    display: block;
+  }
+
   .btn-submit {
     display: inline-flex;
     align-items: center;
@@ -568,6 +591,8 @@ import TicketUpload from "./TicketUpload.astro";
 </style>
 
 <script>
+  import { submitRegistration } from '../lib/supabase';
+
   // Form submission handler & real-time comprehensive validation
   function setupFormHandler() {
     const form = document.getElementById('oasis-ticket-form') as HTMLFormElement | null;
@@ -576,6 +601,8 @@ import TicketUpload from "./TicketUpload.astro";
     const btnClose = document.getElementById('btn-modal-close');
     const backdrop = document.getElementById('modal-backdrop');
     const btnSubmit = document.getElementById('btn-submit') as HTMLButtonElement | null;
+    const errorBanner = document.getElementById('form-error-banner');
+    const errorText = document.getElementById('form-error-text');
 
     const nombreInput = document.getElementById('nombre') as HTMLInputElement | null;
     const dniInput = document.getElementById('dni') as HTMLInputElement | null;
@@ -586,14 +613,29 @@ import TicketUpload from "./TicketUpload.astro";
 
     if (!form || !btnSubmit) return;
 
+    function showFormError(msg: string) {
+      if (errorBanner && errorText) {
+        errorText.textContent = msg;
+        errorBanner.style.display = 'flex';
+      }
+    }
+
+    function hideFormError() {
+      if (errorBanner) {
+        errorBanner.style.display = 'none';
+      }
+    }
+
     // Strict numerical input filter for DNI and Phone
     dniInput?.addEventListener('input', () => {
       dniInput.value = dniInput.value.replace(/[^0-9]/g, '');
+      hideFormError();
       validateForm();
     });
 
     telInput?.addEventListener('input', () => {
       telInput.value = telInput.value.replace(/[^0-9]/g, '');
+      hideFormError();
       validateForm();
     });
 
@@ -664,39 +706,96 @@ import TicketUpload from "./TicketUpload.astro";
     }
 
     // Attach real-time validation triggers
-    form.addEventListener('input', validateForm);
-    form.addEventListener('change', validateForm);
-    window.addEventListener('ticket-validated', validateForm);
+    form.addEventListener('input', () => {
+      hideFormError();
+      validateForm();
+    });
+    form.addEventListener('change', () => {
+      hideFormError();
+      validateForm();
+    });
+    window.addEventListener('ticket-validated', () => {
+      hideFormError();
+      validateForm();
+    });
 
     // Initial check on load
     validateForm();
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      hideFormError();
 
       if (!validateForm()) {
         return;
       }
 
-      // Collect form info for summary display
       const formData = new FormData(form);
-      const nombre = formData.get('nombre') as string;
-      const tienda = (formData.get('tienda') as string) === 'malabia' ? 'Originals Malabia' : 'Originals Unicenter';
-      const ticketFile = formData.get('ticket') as File;
-      const ticketName = ticketFile ? ticketFile.name : 'Comprobante adjunto';
+      const nombre = (formData.get('nombre') as string) || '';
+      const tienda = (formData.get('tienda') as 'malabia' | 'unicenter') || 'malabia';
+      const dni = (formData.get('dni') as string) || '';
+      const telefono = (formData.get('telefono') as string) || '';
+      const email = (formData.get('email') as string) || '';
+      const ticketFile = fileInput?.files?.[0];
 
-      if (modalSummary) {
-        modalSummary.innerHTML = `
-          <div><strong>Titular:</strong> ${nombre || 'Registrado'}</div>
-          <div><strong>Tienda seleccionada:</strong> ${tienda}</div>
-          <div><strong>Comprobante:</strong> ${ticketName}</div>
-        `;
+      if (!ticketFile) {
+        showFormError('Debes adjuntar un comprobante de compra válido.');
+        return;
       }
 
-      // Display confirmation modal
-      if (modal) {
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+      const originalBtnHtml = btnSubmit.innerHTML;
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = `
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2.5" style="animation: spin 0.8s linear infinite;">
+          <circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"></circle>
+        </svg>
+        <span>GUARDANDO REGISTRO...</span>
+      `;
+
+      try {
+        const result = await submitRegistration({
+          tienda,
+          nombre,
+          dni,
+          telefono,
+          email,
+          ticketFile,
+        });
+
+        // ONLY IF SUPABASE RETURNED REAL DATA WITH ID
+        if (!result?.data?.id) {
+          throw new Error('No se pudo verificar la creación del registro en la base de datos.');
+        }
+
+        const storeNameFormatted = tienda === 'malabia' ? 'Originals Malabia' : 'Originals Unicenter';
+        const ticketDisplayName = ticketFile.name;
+        const sizeMb = (ticketFile.size / (1024 * 1024)).toFixed(2);
+
+        if (modalSummary) {
+          modalSummary.innerHTML = `
+            <div><strong>Titular:</strong> ${nombre}</div>
+            <div><strong>DNI:</strong> ${dni}</div>
+            <div><strong>Tienda seleccionada:</strong> ${storeNameFormatted}</div>
+            <div><strong>Comprobante:</strong> ${ticketDisplayName} (${sizeMb} MB)</div>
+          `;
+        }
+
+        // Display confirmation modal
+        if (modal) {
+          modal.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+        }
+
+        // Reset form
+        form.reset();
+        validateForm();
+      } catch (err: any) {
+        console.error('[Registration Error]', err);
+        const errorMsg = err.message || 'Error al conectar con la base de datos. Verifica tu conexión e intenta nuevamente.';
+        showFormError(errorMsg);
+      } finally {
+        btnSubmit.innerHTML = originalBtnHtml;
+        validateForm();
       }
     });
 
