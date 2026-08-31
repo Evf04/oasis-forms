@@ -64,6 +64,7 @@ import TicketUpload from "./TicketUpload.astro";
             name="dni"
             required
             pattern="[0-9]{7,9}"
+            maxlength="9"
             placeholder="DNI"
             class="form-input"
             inputmode="numeric"
@@ -78,8 +79,11 @@ import TicketUpload from "./TicketUpload.astro";
             id="telefono"
             name="telefono"
             required
+            pattern="[0-9]{6,15}"
+            maxlength="15"
             placeholder="Teléfono"
             class="form-input"
+            inputmode="numeric"
             autocomplete="tel"
           />
         </div>
@@ -358,6 +362,7 @@ import TicketUpload from "./TicketUpload.astro";
     accent-color: #ffffff;
     cursor: pointer;
     flex-shrink: 0;
+    border-radius: 4px;
   }
 
   .checkbox-label {
@@ -563,22 +568,113 @@ import TicketUpload from "./TicketUpload.astro";
 </style>
 
 <script>
-  // Form submission handler with visual confirmation
+  // Form submission handler & real-time comprehensive validation
   function setupFormHandler() {
     const form = document.getElementById('oasis-ticket-form') as HTMLFormElement | null;
     const modal = document.getElementById('confirmation-modal');
     const modalSummary = document.getElementById('modal-summary');
     const btnClose = document.getElementById('btn-modal-close');
     const backdrop = document.getElementById('modal-backdrop');
+    const btnSubmit = document.getElementById('btn-submit') as HTMLButtonElement | null;
 
-    if (!form || !modal) return;
+    const nombreInput = document.getElementById('nombre') as HTMLInputElement | null;
+    const dniInput = document.getElementById('dni') as HTMLInputElement | null;
+    const telInput = document.getElementById('telefono') as HTMLInputElement | null;
+    const emailInput = document.getElementById('email') as HTMLInputElement | null;
+    const termsCheckbox = document.getElementById('terms') as HTMLInputElement | null;
+    const fileInput = document.getElementById('ticket-input') as HTMLInputElement | null;
+
+    if (!form || !btnSubmit) return;
+
+    // Strict numerical input filter for DNI and Phone
+    dniInput?.addEventListener('input', () => {
+      dniInput.value = dniInput.value.replace(/[^0-9]/g, '');
+      validateForm();
+    });
+
+    telInput?.addEventListener('input', () => {
+      telInput.value = telInput.value.replace(/[^0-9]/g, '');
+      validateForm();
+    });
+
+    function validateForm(): boolean {
+      // 1. Check Store selection
+      const storeSelected = !!form?.querySelector('input[name="tienda"]:checked');
+      if (!storeSelected) {
+        if (btnSubmit) btnSubmit.disabled = true;
+        return false;
+      }
+
+      // 2. Check Nombre (non empty, trimmed)
+      const nombreVal = nombreInput?.value.trim() || '';
+      if (nombreVal.length < 2) {
+        if (btnSubmit) btnSubmit.disabled = true;
+        return false;
+      }
+
+      // 3. Check DNI (only numbers, 7-9 digits)
+      const dniVal = dniInput?.value.trim() || '';
+      if (!/^[0-9]{7,9}$/.test(dniVal)) {
+        if (btnSubmit) btnSubmit.disabled = true;
+        return false;
+      }
+
+      // 4. Check Phone (only numbers, 6-15 digits)
+      const telVal = telInput?.value.trim() || '';
+      if (!/^[0-9]{6,15}$/.test(telVal)) {
+        if (btnSubmit) btnSubmit.disabled = true;
+        return false;
+      }
+
+      // 5. Check Email (must have @ and valid email format)
+      const emailVal = emailInput?.value.trim() || '';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+        if (btnSubmit) btnSubmit.disabled = true;
+        return false;
+      }
+
+      // 6. Check Ticket (must have attached file <= 3MB and allowed format)
+      const file = fileInput?.files?.[0];
+      if (!file) {
+        if (btnSubmit) btnSubmit.disabled = true;
+        return false;
+      }
+      if (file.size > 3 * 1024 * 1024) {
+        if (btnSubmit) btnSubmit.disabled = true;
+        return false;
+      }
+      const fileNameLower = file.name.toLowerCase();
+      const validExts = ['.jpg', '.jpeg', '.png', '.webp', '.pdf'];
+      const validMimes = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+      const hasValidFormat = validExts.some(ext => fileNameLower.endsWith(ext)) || validMimes.includes(file.type);
+      if (!hasValidFormat) {
+        if (btnSubmit) btnSubmit.disabled = true;
+        return false;
+      }
+
+      // 7. Check Terms checkbox
+      if (!termsCheckbox?.checked) {
+        if (btnSubmit) btnSubmit.disabled = true;
+        return false;
+      }
+
+      // All fields valid and complete!
+      if (btnSubmit) btnSubmit.disabled = false;
+      return true;
+    }
+
+    // Attach real-time validation triggers
+    form.addEventListener('input', validateForm);
+    form.addEventListener('change', validateForm);
+    window.addEventListener('ticket-validated', validateForm);
+
+    // Initial check on load
+    validateForm();
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      // Check validity
-      if (!form.checkValidity()) {
-        form.reportValidity();
+      if (!validateForm()) {
         return;
       }
 
@@ -598,8 +694,10 @@ import TicketUpload from "./TicketUpload.astro";
       }
 
       // Display confirmation modal
-      modal.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
+      if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
     });
 
     function closeModal() {
@@ -607,18 +705,6 @@ import TicketUpload from "./TicketUpload.astro";
         modal.style.display = 'none';
         document.body.style.overflow = '';
       }
-    }
-
-    const termsCheckbox = document.getElementById('terms') as HTMLInputElement | null;
-    const btnSubmit = document.getElementById('btn-submit') as HTMLButtonElement | null;
-
-    // Synchronize disabled state with terms checkbox
-    if (termsCheckbox && btnSubmit) {
-      btnSubmit.disabled = !termsCheckbox.checked;
-
-      termsCheckbox.addEventListener('change', () => {
-        btnSubmit.disabled = !termsCheckbox.checked;
-      });
     }
 
     btnClose?.addEventListener('click', closeModal);

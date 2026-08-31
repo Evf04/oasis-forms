@@ -16,14 +16,14 @@
       type="file"
       id="ticket-input"
       name="ticket"
-      accept="image/png,image/jpeg,image/webp,image/heic,application/pdf"
+      accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
       required
       class="file-input-hidden"
     />
     <input
       type="file"
       id="camera-input"
-      accept="image/*"
+      accept="image/jpeg,image/png,image/webp"
       capture="environment"
       class="file-input-hidden"
     />
@@ -57,8 +57,6 @@
           <span>Abrir cámara</span>
         </button>
       </div>
-
-      <span class="upload-formats">Formatos permitidos: JPG, PNG, WEBP, PDF (Máx. 10MB)</span>
     </div>
 
     <!-- Preview State UI (shown when file selected) -->
@@ -88,6 +86,9 @@
       </div>
     </div>
   </div>
+
+  <!-- Error feedback message (hidden by default) -->
+  <p class="upload-error-msg" id="upload-error-msg" style="display: none;" role="alert"></p>
 </div>
 
 <style>
@@ -227,9 +228,13 @@
     }
   }
 
-  .upload-formats {
-    font-size: 0.78rem;
-    color: var(--text-muted);
+  .upload-error-msg {
+    color: #ff5555;
+    font-size: 0.85rem;
+    margin-top: 0.65rem;
+    text-align: center;
+    font-weight: 500;
+    letter-spacing: 0.01em;
   }
 
   /* Preview Styles */
@@ -238,8 +243,8 @@
     align-items: center;
     gap: 1.25rem;
     background: #0d0d0d;
-    border: 1px solid #333333;
-    border-radius: var(--radius-sm);
+    border: 1.75px solid #444444;
+    border-radius: var(--radius-md);
     padding: 1rem 1.25rem;
     text-align: left;
   }
@@ -340,7 +345,7 @@
 </style>
 
 <script>
-  // Ticket file upload & camera preview logic
+  // Ticket file upload & camera preview logic with 3MB & format validation
   function setupUpload() {
     const fileInput = document.getElementById('ticket-input') as HTMLInputElement | null;
     const cameraInput = document.getElementById('camera-input') as HTMLInputElement | null;
@@ -353,8 +358,27 @@
     const previewName = document.getElementById('preview-filename');
     const previewSize = document.getElementById('preview-filesize');
     const btnRemove = document.getElementById('btn-remove-file');
+    const errorMsg = document.getElementById('upload-error-msg');
 
     if (!fileInput || !emptyState || !previewState || !mediaSlot) return;
+
+    const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3 MB
+    const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.pdf'];
+    const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+
+    function showError(message: string) {
+      if (errorMsg) {
+        errorMsg.textContent = message;
+        errorMsg.style.display = 'block';
+      }
+    }
+
+    function clearError() {
+      if (errorMsg) {
+        errorMsg.textContent = '';
+        errorMsg.style.display = 'none';
+      }
+    }
 
     btnBrowse?.addEventListener('click', () => {
       fileInput.click();
@@ -367,6 +391,31 @@
     function handleFile(file: File) {
       if (!file) return;
 
+      clearError();
+
+      // Check file extension / format
+      const fileNameLower = file.name.toLowerCase();
+      const hasValidExt = ALLOWED_EXTENSIONS.some(ext => fileNameLower.endsWith(ext));
+      const hasValidMime = ALLOWED_MIME_TYPES.includes(file.type);
+
+      if (!hasValidExt && !hasValidMime) {
+        showError('Formato no válido. Solo se permiten imágenes JPG, PNG, WEBP o documentos PDF.');
+        fileInput.value = '';
+        if (cameraInput) cameraInput.value = '';
+        window.dispatchEvent(new CustomEvent('ticket-validated', { detail: { valid: false } }));
+        return;
+      }
+
+      // Check file size (must be <= 3MB)
+      if (file.size > MAX_FILE_SIZE) {
+        showError('El archivo supera el tamaño máximo permitido de 3MB.');
+        fileInput.value = '';
+        if (cameraInput) cameraInput.value = '';
+        window.dispatchEvent(new CustomEvent('ticket-validated', { detail: { valid: false } }));
+        return;
+      }
+
+      // Assign to main file input if needed
       if (fileInput && fileInput.files && fileInput.files[0] !== file) {
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
@@ -402,6 +451,9 @@
 
       emptyState.style.display = 'none';
       previewState.style.display = 'block';
+
+      // Notify form validator
+      window.dispatchEvent(new CustomEvent('ticket-validated', { detail: { valid: true } }));
     }
 
     fileInput.addEventListener('change', () => {
@@ -419,9 +471,11 @@
     btnRemove?.addEventListener('click', () => {
       fileInput.value = '';
       if (cameraInput) cameraInput.value = '';
+      clearError();
       emptyState.style.display = 'flex';
       previewState.style.display = 'none';
       if (mediaSlot) mediaSlot.innerHTML = '';
+      window.dispatchEvent(new CustomEvent('ticket-validated', { detail: { valid: false } }));
     });
 
     // Drag and drop
