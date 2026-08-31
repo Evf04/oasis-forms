@@ -114,10 +114,6 @@ import TicketUpload from "./TicketUpload.astro";
 
       <button type="submit" class="btn-submit" id="btn-submit">
         <span>CONFIRMAR REGISTRO</span>
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" class="btn-arrow" aria-hidden="true">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="12 5 19 12 12 19"></polyline>
-        </svg>
       </button>
     </div>
   </form>
@@ -410,18 +406,10 @@ import TicketUpload from "./TicketUpload.astro";
       transform: translateY(-2px);
       box-shadow: 0 8px 32px rgba(255, 255, 255, 0.3);
     }
-    .btn-submit:hover .btn-arrow {
-      transform: translateX(4px);
-    }
   }
 
   .btn-submit:active {
     transform: scale(0.98);
-  }
-
-  .btn-arrow {
-    transition: transform var(--transition-fast);
-    flex-shrink: 0;
   }
 
   /* Modal Confirmation */
