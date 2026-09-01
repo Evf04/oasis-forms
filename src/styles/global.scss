@@ -5,7 +5,8 @@
 // --- Font Declarations ---
 @font-face {
   font-family: 'adidasFG';
-  src: url('/fonts/adidasFG-CompressedBold.ttf') format('truetype');
+  src: url('/fonts/adidasFG-CompressedBold.woff2') format('woff2'),
+    url('/fonts/adidasFG-CompressedBold.ttf') format('truetype');
   font-weight: 100 900;
   font-style: normal;
   font-display: block;
@@ -13,7 +14,8 @@
 
 @font-face {
   font-family: 'adidasFG-CompressedBold';
-  src: url('/fonts/adidasFG-CompressedBold.ttf') format('truetype');
+  src: url('/fonts/adidasFG-CompressedBold.woff2') format('woff2'),
+    url('/fonts/adidasFG-CompressedBold.ttf') format('truetype');
   font-weight: 100 900;
   font-style: normal;
   font-display: block;
@@ -21,7 +23,8 @@
 
 @font-face {
   font-family: 'ArialCustom';
-  src: url('/fonts/Arial.ttf') format('truetype');
+  src: url('/fonts/Arial.woff2') format('woff2'),
+    url('/fonts/Arial.ttf') format('truetype');
   font-weight: 100 900;
   font-style: normal;
   font-display: block;
@@ -215,6 +218,7 @@ button {
 
 // --- Touch States ---
 @media (hover: none) and (pointer: coarse) {
+
   button:active,
   .store-card:active,
   .btn-action:active {

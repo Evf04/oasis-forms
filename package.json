@@ -19,6 +19,8 @@
     "esbuild": true
   },
   "devDependencies": {
-    "sass": "^1.103.1"
+    "sass": "^1.103.1",
+    "subset-font": "^2.7.0",
+    "ttf2woff2": "^8.0.1"
   }
 }
