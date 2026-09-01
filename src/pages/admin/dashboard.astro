@@ -81,6 +81,10 @@ import Layout from "../../layouts/Layout.astro";
             <span class="metric-label">ORIGINALS UNICENTER</span>
             <span class="metric-value" id="stat-unicenter">0</span>
           </div>
+          <div class="metric-card metric-card-prohibited">
+            <span class="metric-label">NO HABILITADOS</span>
+            <span class="metric-value metric-value-red" id="stat-prohibidos">0</span>
+          </div>
         </div>
 
         <!-- Filters and Search Toolbar -->
@@ -98,12 +102,23 @@ import Layout from "../../layouts/Layout.astro";
             />
           </div>
 
-          <div class="filter-group">
-            <span class="filter-label">Tienda:</span>
-            <div class="filter-buttons">
-              <button type="button" class="btn-filter active" data-store="all">TODAS</button>
-              <button type="button" class="btn-filter" data-store="malabia">MALABIA</button>
-              <button type="button" class="btn-filter" data-store="unicenter">UNICENTER</button>
+          <div class="toolbar-filters">
+            <div class="filter-group">
+              <span class="filter-label">Tienda:</span>
+              <div class="filter-buttons">
+                <button type="button" class="btn-filter btn-filter-store active" data-store="all">TODAS</button>
+                <button type="button" class="btn-filter btn-filter-store" data-store="malabia">MALABIA</button>
+                <button type="button" class="btn-filter btn-filter-store" data-store="unicenter">UNICENTER</button>
+              </div>
+            </div>
+
+            <div class="filter-group">
+              <span class="filter-label">Ver:</span>
+              <div class="filter-buttons">
+                <button type="button" class="btn-filter btn-filter-status active" data-status="active">HABILITADOS</button>
+                <button type="button" class="btn-filter btn-filter-status" data-status="prohibited">NO HABILITADOS</button>
+                <button type="button" class="btn-filter btn-filter-status" data-status="all">TODOS</button>
+              </div>
             </div>
           </div>
         </div>
@@ -153,7 +168,7 @@ import Layout from "../../layouts/Layout.astro";
                 <th>Contacto</th>
                 <th>Comprobante</th>
                 <th>Notas Admin</th>
-                <th>Borrar</th>
+                <th>Habilitación</th>
               </tr>
             </thead>
             <tbody id="table-body">
@@ -198,23 +213,21 @@ import Layout from "../../layouts/Layout.astro";
       </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="modal-delete" id="delete-modal" style="display: none;" role="dialog" aria-modal="true">
-      <div class="modal-delete-backdrop" id="modal-delete-backdrop"></div>
+    <!-- Ban / Unban Confirmation Modal -->
+    <div class="modal-delete" id="ban-modal" style="display: none;" role="dialog" aria-modal="true">
+      <div class="modal-delete-backdrop" id="modal-ban-backdrop"></div>
       <div class="modal-delete-card">
-        <div class="delete-icon-wrap">
-          <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#ff4d4f" stroke-width="2.2">
-            <path d="M3 6h18"></path>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-            <line x1="10" y1="11" x2="10" y2="17"></line>
-            <line x1="14" y1="11" x2="14" y2="17"></line>
+        <div class="delete-icon-wrap" id="ban-icon-wrap">
+          <svg id="ban-icon-svg" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#ff4d4f" stroke-width="2.2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
           </svg>
         </div>
-        <h3 class="delete-title">¿Eliminar este registro?</h3>
-        <p class="delete-desc" id="delete-desc">Esta acción eliminará el registro de la base de datos y el comprobante del servidor permanentemente.</p>
+        <h3 class="delete-title" id="ban-modal-title">¿Deshabilitar este registro?</h3>
+        <p class="delete-desc" id="ban-modal-desc">El usuario quedará marcado como NO HABILITADO y no podrá volver a registrarse.</p>
         <div class="delete-actions">
-          <button type="button" class="btn-cancel" id="btn-cancel-delete">Cancelar</button>
-          <button type="button" class="btn-confirm-delete" id="btn-confirm-delete">Eliminar definitivamente</button>
+          <button type="button" class="btn-cancel" id="btn-cancel-ban">Cancelar</button>
+          <button type="button" class="btn-confirm-delete" id="btn-confirm-ban">Confirmar Deshabilitación</button>
         </div>
       </div>
     </div>
@@ -385,9 +398,10 @@ import Layout from "../../layouts/Layout.astro";
   }
 
   /* Metrics Grid */
+  /* Metrics Grid */
   .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: clamp(1rem, 2vw, 1.75rem);
     width: 100%;
   }
@@ -396,7 +410,7 @@ import Layout from "../../layouts/Layout.astro";
     background: #000000;
     border: 2.5px solid #444444;
     border-radius: var(--radius-md);
-    padding: clamp(1.35rem, 2.2vw, 2rem) clamp(1.25rem, 2vw, 2rem);
+    padding: clamp(1.25rem, 2vw, 1.85rem) clamp(1rem, 1.8vw, 1.75rem);
     display: flex;
     flex-direction: column;
     gap: 0.45rem;
@@ -406,6 +420,9 @@ import Layout from "../../layouts/Layout.astro";
   @media (hover: hover) and (pointer: fine) {
     .metric-card:hover {
       border-color: #666666;
+    }
+    .metric-card-prohibited:hover {
+      border-color: rgba(255, 77, 79, 0.6);
     }
   }
 
@@ -418,10 +435,14 @@ import Layout from "../../layouts/Layout.astro";
 
   .metric-value {
     font-family: var(--font-display);
-    font-size: clamp(2.4rem, 3.8vw, 3.6rem);
+    font-size: clamp(2.2rem, 3.5vw, 3.4rem);
     color: var(--text-primary);
     line-height: 1;
     font-weight: 700;
+  }
+
+  .metric-value-red {
+    color: #ff4d4f;
   }
 
   /* Toolbar */
@@ -443,7 +464,7 @@ import Layout from "../../layouts/Layout.astro";
     display: flex;
     align-items: center;
     flex: 1;
-    min-width: clamp(280px, 40vw, 480px);
+    min-width: clamp(260px, 30vw, 420px);
   }
 
   .search-icon {
@@ -471,10 +492,17 @@ import Layout from "../../layouts/Layout.astro";
     box-shadow: 0 0 0 1.5px var(--accent-white);
   }
 
+  .toolbar-filters {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 2vw, 1.75rem);
+    flex-wrap: wrap;
+  }
+
   .filter-group {
     display: flex;
     align-items: center;
-    gap: 0.85rem;
+    gap: 0.75rem;
     flex-wrap: wrap;
   }
 
@@ -625,25 +653,53 @@ import Layout from "../../layouts/Layout.astro";
     border-color: #ffffff;
   }
 
-  :global(.btn-delete-row) {
-    background: transparent;
-    border: none;
-    color: #ff4d4f;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 4px;
+  :global(.row-banned) {
+    opacity: 0.65;
+    background: rgba(255, 77, 79, 0.04);
+
+    &:hover {
+      opacity: 0.95;
+      background: rgba(255, 77, 79, 0.08);
+    }
+  }
+
+  :global(.btn-ban-toggle) {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    min-width: var(--min-touch-target);
-    min-height: var(--min-touch-target);
+    gap: 0.45rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-size: 0.92rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    min-height: 38px;
     transition: all var(--transition-fast);
   }
 
-  :global(.btn-delete-row:hover) {
-    background: rgba(255, 77, 79, 0.2);
-    color: #ff7875;
-    transform: scale(1.1);
+  :global(.btn-ban) {
+    background: transparent;
+    border: none;
+    color: #ff4d4f;
+
+    &:hover {
+      background: rgba(255, 77, 79, 0.15);
+      color: #ff7875;
+      transform: scale(1.03);
+    }
+  }
+
+  :global(.btn-unban) {
+    background: transparent;
+    border: 1.5px solid #52c41a;
+    color: #52c41a;
+
+    &:hover {
+      background: #52c41a;
+      color: #000000;
+      transform: scale(1.03);
+    }
   }
 
   :global(.notes-input) {
@@ -926,7 +982,7 @@ import Layout from "../../layouts/Layout.astro";
     }
 
     .metrics-grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 1rem;
     }
 
@@ -939,6 +995,13 @@ import Layout from "../../layouts/Layout.astro";
     .search-box {
       width: 100%;
       min-width: unset;
+    }
+
+    .toolbar-filters {
+      width: 100%;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.85rem;
     }
 
     .filter-group {
@@ -1005,7 +1068,7 @@ import Layout from "../../layouts/Layout.astro";
     }
 
     .metrics-grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, 1fr);
       gap: 0.75rem;
     }
 
@@ -1138,6 +1201,7 @@ import Layout from "../../layouts/Layout.astro";
     ticket_filename: string;
     ticket_size_bytes: number;
     admin_notes: string | null;
+    is_banned?: boolean;
     created_at: string;
   }
 
@@ -1171,7 +1235,8 @@ import Layout from "../../layouts/Layout.astro";
     const btnRetry = document.getElementById('btn-retry');
     const btnExport = document.getElementById('btn-export');
     const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
-    const filterButtons = document.querySelectorAll('.btn-filter');
+    const filterButtonsStore = document.querySelectorAll('.btn-filter-store');
+    const filterButtonsStatus = document.querySelectorAll('.btn-filter-status');
 
     const loadingState = document.getElementById('loading-state');
     const errorState = document.getElementById('error-state');
@@ -1183,6 +1248,7 @@ import Layout from "../../layouts/Layout.astro";
     const statTotal = document.getElementById('stat-total');
     const statMalabia = document.getElementById('stat-malabia');
     const statUnicenter = document.getElementById('stat-unicenter');
+    const statProhibidos = document.getElementById('stat-prohibidos');
 
     // Ticket modal elements
     const ticketModal = document.getElementById('ticket-modal');
@@ -1193,17 +1259,21 @@ import Layout from "../../layouts/Layout.astro";
     const btnTicketClose = document.getElementById('btn-ticket-modal-close');
     const ticketBackdrop = document.getElementById('modal-ticket-backdrop');
 
-    // Delete modal elements
-    const deleteModal = document.getElementById('delete-modal');
-    const deleteDesc = document.getElementById('delete-desc');
-    const btnCancelDelete = document.getElementById('btn-cancel-delete');
-    const btnConfirmDelete = document.getElementById('btn-confirm-delete');
-    const deleteBackdrop = document.getElementById('modal-delete-backdrop');
+    // Ban modal elements
+    const banModal = document.getElementById('ban-modal');
+    const banModalTitle = document.getElementById('ban-modal-title');
+    const banModalDesc = document.getElementById('ban-modal-desc');
+    const btnCancelBan = document.getElementById('btn-cancel-ban');
+    const btnConfirmBan = document.getElementById('btn-confirm-ban') as HTMLButtonElement | null;
+    const banBackdrop = document.getElementById('modal-ban-backdrop');
+    const banIconWrap = document.getElementById('ban-icon-wrap');
+    const banIconSvg = document.getElementById('ban-icon-svg');
 
     let allRegistrations: Registration[] = [];
     let currentFilterStore: 'all' | 'malabia' | 'unicenter' = 'all';
+    let currentFilterStatus: 'active' | 'prohibited' | 'all' = 'active';
     let currentSearchTerm = '';
-    let pendingDeleteRegistration: Registration | null = null;
+    let pendingBanRegistration: Registration | null = null;
 
     async function loadData() {
       if (loadingState) loadingState.style.display = 'flex';
@@ -1240,18 +1310,28 @@ import Layout from "../../layouts/Layout.astro";
       const total = allRegistrations.length;
       const malabiaCount = allRegistrations.filter((r) => r.tienda === 'malabia').length;
       const unicenterCount = allRegistrations.filter((r) => r.tienda === 'unicenter').length;
+      const prohibidosCount = allRegistrations.filter((r) => Boolean(r.is_banned)).length;
 
       if (statTotal) statTotal.textContent = total.toString();
       if (statMalabia) statMalabia.textContent = malabiaCount.toString();
       if (statUnicenter) statUnicenter.textContent = unicenterCount.toString();
+      if (statProhibidos) statProhibidos.textContent = prohibidosCount.toString();
     }
 
     function renderTable() {
       if (loadingState) loadingState.style.display = 'none';
 
-      // Apply filter and search
+      // Apply store, status, and search filters
       const filtered = allRegistrations.filter((item) => {
         const matchesStore = currentFilterStore === 'all' || item.tienda === currentFilterStore;
+        
+        let matchesStatus = true;
+        if (currentFilterStatus === 'active') {
+          matchesStatus = !item.is_banned;
+        } else if (currentFilterStatus === 'prohibited') {
+          matchesStatus = Boolean(item.is_banned);
+        }
+
         const query = currentSearchTerm.toLowerCase();
         const matchesSearch =
           !query ||
@@ -1260,7 +1340,7 @@ import Layout from "../../layouts/Layout.astro";
           item.telefono.toLowerCase().includes(query) ||
           item.email.toLowerCase().includes(query);
 
-        return matchesStore && matchesSearch;
+        return matchesStore && matchesStatus && matchesSearch;
       });
 
       if (filtered.length === 0) {
@@ -1276,6 +1356,7 @@ import Layout from "../../layouts/Layout.astro";
         tableBody.innerHTML = filtered
           .map((reg) => {
             const formattedDate = new Date(reg.created_at).toLocaleString('es-AR', {
+              timeZone: 'America/Argentina/Buenos_Aires',
               day: '2-digit',
               month: '2-digit',
               year: 'numeric',
@@ -1285,9 +1366,31 @@ import Layout from "../../layouts/Layout.astro";
 
             const storeBadgeClass = reg.tienda === 'malabia' ? 'store-badge-malabia' : 'store-badge-unicenter';
             const storeLabel = reg.tienda === 'malabia' ? 'MALABIA' : 'UNICENTER';
+            const isBanned = Boolean(reg.is_banned);
+            const rowClass = isBanned ? 'row-banned' : '';
+
+            const banButtonHtml = isBanned
+              ? `
+                <button type="button" class="btn-ban-toggle btn-unban" data-action="toggle-ban" data-id="${reg.id}" title="Habilitar usuario">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <polyline points="9 12 11 14 15 10"></polyline>
+                  </svg>
+                  <span>HABILITAR</span>
+                </button>
+              `
+              : `
+                <button type="button" class="btn-ban-toggle btn-ban" data-action="toggle-ban" data-id="${reg.id}" title="Deshabilitar usuario">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                  </svg>
+                  <span>DESHABILITAR</span>
+                </button>
+              `;
 
             return `
-              <tr data-id="${reg.id}">
+              <tr data-id="${reg.id}" class="${rowClass}">
                 <td style="white-space: nowrap; color: #888888; font-size: 0.88rem;">${formattedDate}</td>
                 <td><span class="${storeBadgeClass}">${storeLabel}</span></td>
                 <td style="font-weight: 600; color: #ffffff; font-size: 0.95rem;">${escapeHtml(reg.nombre)}</td>
@@ -1317,12 +1420,7 @@ import Layout from "../../layouts/Layout.astro";
                   />
                 </td>
                 <td>
-                  <button type="button" class="btn-delete-row" data-action="delete" data-id="${reg.id}" title="Eliminar registro">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="3 6 5 6 21 6"></polyline>
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    </svg>
-                  </button>
+                  ${banButtonHtml}
                 </td>
               </tr>
             `;
@@ -1339,11 +1437,11 @@ import Layout from "../../layouts/Layout.astro";
         });
       });
 
-      tableBody?.querySelectorAll('button[data-action="delete"]').forEach((btn) => {
+      tableBody?.querySelectorAll('button[data-action="toggle-ban"]').forEach((btn) => {
         btn.addEventListener('click', () => {
           const id = btn.getAttribute('data-id');
           const reg = allRegistrations.find((r) => r.id === id);
-          if (reg) openDeleteModal(reg);
+          if (reg) openBanModal(reg);
         });
       });
 
@@ -1398,61 +1496,75 @@ import Layout from "../../layouts/Layout.astro";
     btnTicketClose?.addEventListener('click', closeTicketModal);
     ticketBackdrop?.addEventListener('click', closeTicketModal);
 
-    function openDeleteModal(reg: Registration) {
-      pendingDeleteRegistration = reg;
-      if (deleteDesc) {
-        deleteDesc.textContent = `¿Estás seguro de eliminar el registro de ${reg.nombre} (DNI: ${reg.dni})?`;
+    function openBanModal(reg: Registration) {
+      pendingBanRegistration = reg;
+      const isBanned = Boolean(reg.is_banned);
+
+      if (banModalTitle && banModalDesc && btnConfirmBan && banIconWrap) {
+        if (isBanned) {
+          banModalTitle.textContent = `¿HABILITAR A ${reg.nombre.toUpperCase()}?`;
+          banModalDesc.textContent = `El registro de ${reg.nombre} (DNI: ${reg.dni}) volverá a estar HABILITADO y visible en la lista principal de participantes.`;
+          btnConfirmBan.textContent = 'Habilitar Registro';
+          btnConfirmBan.style.background = '#52c41a';
+          btnConfirmBan.style.color = '#000000';
+          banIconWrap.style.background = 'rgba(82, 196, 26, 0.12)';
+          banIconWrap.style.borderColor = 'rgba(82, 196, 26, 0.3)';
+          if (banIconSvg) banIconSvg.setAttribute('stroke', '#52c41a');
+        } else {
+          banModalTitle.textContent = `¿DESHABILITAR A ${reg.nombre.toUpperCase()}?`;
+          banModalDesc.textContent = `El usuario quedará marcado como NO HABILITADO. Sus datos (DNI: ${reg.dni}) permanecerán en la base de datos para impedir que vuelva a registrarse en el formulario.`;
+          btnConfirmBan.textContent = 'Confirmar Deshabilitación';
+          btnConfirmBan.style.background = '#ff4d4f';
+          btnConfirmBan.style.color = '#ffffff';
+          banIconWrap.style.background = 'rgba(255, 77, 79, 0.12)';
+          banIconWrap.style.borderColor = 'rgba(255, 77, 79, 0.3)';
+          if (banIconSvg) banIconSvg.setAttribute('stroke', '#ff4d4f');
+        }
       }
-      if (deleteModal) {
-        deleteModal.style.display = 'flex';
+
+      if (banModal) {
+        banModal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
       }
     }
 
-    function closeDeleteModal() {
-      pendingDeleteRegistration = null;
-      if (deleteModal) {
-        deleteModal.style.display = 'none';
+    function closeBanModal() {
+      pendingBanRegistration = null;
+      if (banModal) {
+        banModal.style.display = 'none';
         document.body.style.overflow = '';
       }
     }
 
-    btnCancelDelete?.addEventListener('click', closeDeleteModal);
-    deleteBackdrop?.addEventListener('click', closeDeleteModal);
+    btnCancelBan?.addEventListener('click', closeBanModal);
+    banBackdrop?.addEventListener('click', closeBanModal);
 
-    btnConfirmDelete?.addEventListener('click', async () => {
-      if (!pendingDeleteRegistration) return;
-      const reg = pendingDeleteRegistration;
+    btnConfirmBan?.addEventListener('click', async () => {
+      if (!pendingBanRegistration || !btnConfirmBan) return;
+      const reg = pendingBanRegistration;
+      const newBannedState = !reg.is_banned;
 
-      btnConfirmDelete.textContent = 'Eliminando...';
-      btnConfirmDelete.setAttribute('disabled', 'true');
+      btnConfirmBan.textContent = newBannedState ? 'Deshabilitando...' : 'Habilitando...';
+      btnConfirmBan.setAttribute('disabled', 'true');
 
       try {
         const client = getSupabaseClient();
+        const { error: dbError } = await client
+          .from('oasis_registrations')
+          .update({ is_banned: newBannedState })
+          .eq('id', reg.id);
 
-        // 1. Delete from database
-        const { error: dbError } = await client.from('oasis_registrations').delete().eq('id', reg.id);
         if (dbError) throw dbError;
 
-        // 2. Delete from storage if filename exists
-        if (reg.ticket_filename) {
-          try {
-            await client.storage.from('tickets').remove([reg.ticket_filename]);
-          } catch (storageErr) {
-            console.warn('[Storage remove warning]', storageErr);
-          }
-        }
-
         // Update local state
-        allRegistrations = allRegistrations.filter((r) => r.id !== reg.id);
+        reg.is_banned = newBannedState;
         updateMetrics();
         renderTable();
-        closeDeleteModal();
+        closeBanModal();
       } catch (err: any) {
-        alert('Error al eliminar registro: ' + (err.message || 'Error desconocido'));
+        alert('Error al actualizar estado: ' + (err.message || 'Error desconocido'));
       } finally {
-        btnConfirmDelete.textContent = 'Eliminar definitivamente';
-        btnConfirmDelete.removeAttribute('disabled');
+        btnConfirmBan.removeAttribute('disabled');
       }
     });
 
@@ -1462,11 +1574,20 @@ import Layout from "../../layouts/Layout.astro";
       renderTable();
     });
 
-    filterButtons.forEach((btn) => {
+    filterButtonsStore.forEach((btn) => {
       btn.addEventListener('click', () => {
-        filterButtons.forEach((b) => b.classList.remove('active'));
+        filterButtonsStore.forEach((b) => b.classList.remove('active'));
         btn.classList.add('active');
         currentFilterStore = (btn.getAttribute('data-store') || 'all') as 'all' | 'malabia' | 'unicenter';
+        renderTable();
+      });
+    });
+
+    filterButtonsStatus.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        filterButtonsStatus.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilterStatus = (btn.getAttribute('data-status') || 'active') as 'active' | 'prohibited' | 'all';
         renderTable();
       });
     });
@@ -1485,18 +1606,37 @@ import Layout from "../../layouts/Layout.astro";
         return;
       }
 
-      const headers = ['ID', 'Fecha', 'Tienda', 'Nombre', 'DNI', 'Telefono', 'Email', 'Ticket URL', 'Notas Admin'];
-      const rows = allRegistrations.map((r) => [
-        r.id,
-        new Date(r.created_at).toISOString(),
-        r.tienda,
-        `"${r.nombre.replace(/"/g, '""')}"`,
-        `"${r.dni}"`,
-        `"${r.telefono}"`,
-        `"${r.email}"`,
-        `"${r.ticket_url}"`,
-        `"${(r.admin_notes || '').replace(/"/g, '""')}"`,
-      ]);
+      const headers = ['ID', 'Fecha (GMT-3)', 'Tienda', 'Nombre', 'DNI', 'Telefono', 'Email', 'Ticket URL', 'Notas Admin', 'Estado'];
+      const rows = allRegistrations.map((r) => {
+        let formattedDate = r.created_at;
+        try {
+          formattedDate = new Date(r.created_at).toLocaleString('es-AR', {
+            timeZone: 'America/Argentina/Buenos_Aires',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false,
+          });
+        } catch {
+          formattedDate = r.created_at;
+        }
+
+        return [
+          r.id,
+          `"${formattedDate}"`,
+          r.tienda,
+          `"${r.nombre.replace(/"/g, '""')}"`,
+          `"${r.dni}"`,
+          `"${r.telefono}"`,
+          `"${r.email}"`,
+          `"${r.ticket_url}"`,
+          `"${(r.admin_notes || '').replace(/"/g, '""')}"`,
+          `"${r.is_banned ? 'NO HABILITADO' : 'HABILITADO'}"`,
+        ];
+      });
 
       const csvContent = '\uFEFF' + [headers.join(','), ...rows.map((row) => row.join(','))].join('\n');
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
