@@ -1,5 +1,5 @@
 ---
-import "../styles/global.css";
+import "../styles/global.scss";
 
 interface Props {
   title?: string;
@@ -24,6 +24,23 @@ const {
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="icon" type="image/svg+xml" href="/images/adidas.svg" />
     <link rel="apple-touch-icon" href="/images/adidas.svg" />
+
+    <!-- Preload Campaign Fonts (Eliminates FOUT / Font Flicker) -->
+    <link
+      rel="preload"
+      href="/fonts/adidasFG-CompressedBold.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="/fonts/Arial.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin="anonymous"
+    />
+
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>

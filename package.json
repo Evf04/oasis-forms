@@ -17,5 +17,8 @@
   },
   "allowScripts": {
     "esbuild": true
+  },
+  "devDependencies": {
+    "sass": "^1.103.1"
   }
 }

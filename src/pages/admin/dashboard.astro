@@ -153,7 +153,7 @@ import Layout from "../../layouts/Layout.astro";
                 <th>Contacto</th>
                 <th>Comprobante</th>
                 <th>Notas Admin</th>
-                <th>Acción</th>
+                <th>Borrar</th>
               </tr>
             </thead>
             <tbody id="table-body">
@@ -221,14 +221,17 @@ import Layout from "../../layouts/Layout.astro";
   </div>
 </Layout>
 
-<style>
+<style lang="scss">
   .dashboard-page {
     min-height: 100vh;
     min-height: 100dvh;
+    width: 100%;
+    max-width: 100vw;
     background-color: #000000;
     color: var(--text-primary);
     display: flex;
     flex-direction: column;
+    overflow-x: clip;
   }
 
   /* Navbar */
@@ -243,6 +246,7 @@ import Layout from "../../layouts/Layout.astro";
 
   .dash-nav-container {
     width: 100%;
+    max-width: 100%;
     margin: 0 auto;
     padding: clamp(0.85rem, 1.5vw, 1.35rem) clamp(1rem, 3.5vw, 3.5rem);
     display: flex;
@@ -280,9 +284,9 @@ import Layout from "../../layouts/Layout.astro";
     align-items: center;
     gap: 0.55rem;
     background: transparent;
-    border: 2px solid #555555;
-    color: #cccccc;
-    padding: 0.6rem 1.25rem;
+    border: none;
+    color: #ff4d4f;
+    padding: 0.6rem 1rem;
     border-radius: var(--radius-md);
     cursor: pointer;
     font-family: var(--font-display);
@@ -295,9 +299,8 @@ import Layout from "../../layouts/Layout.astro";
 
   @media (hover: hover) and (pointer: fine) {
     .btn-logout:hover {
-      background: #1a1a1a;
-      color: #ff4d4f;
-      border-color: #ff4d4f;
+      background: rgba(255, 77, 79, 0.15);
+      color: #ff7875;
     }
   }
 
@@ -305,12 +308,14 @@ import Layout from "../../layouts/Layout.astro";
   .dash-main {
     flex-grow: 1;
     width: 100%;
+    max-width: 100%;
     padding: clamp(1rem, 2.5vw, 2.5rem) clamp(1rem, 3.5vw, 3.5rem) clamp(2.5rem, 5vw, 5rem);
     background-color: #000000;
   }
 
   .dash-content-container {
     width: 100%;
+    max-width: 100%;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -329,8 +334,8 @@ import Layout from "../../layouts/Layout.astro";
 
   .dash-title {
     font-family: var(--font-display);
-    font-size: clamp(1.65rem, 3.2vw, 2.4rem);
-    letter-spacing: 0.03em;
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    letter-spacing: 0.04em;
     color: var(--text-primary);
     text-transform: uppercase;
     line-height: 1.1;
@@ -354,6 +359,7 @@ import Layout from "../../layouts/Layout.astro";
     font-family: var(--font-display);
     font-size: 1.05rem;
     letter-spacing: 0.03em;
+    text-transform: uppercase;
     cursor: pointer;
     min-height: 48px;
     transition: all var(--transition-fast);
@@ -547,18 +553,52 @@ import Layout from "../../layouts/Layout.astro";
     vertical-align: middle;
   }
 
-  :global(.dash-table tr:hover td) {
-    background: #0d0d0d;
-  }
-
-  :global(.store-badge) {
+  :global(.store-badge-malabia) {
+    display: inline-block;
+    background: transparent;
+    border: none;
+    color: #60a5fa;
     font-family: var(--font-display);
     font-size: 1.15rem;
-    letter-spacing: 0.04em;
-    color: #ffffff;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     white-space: nowrap;
+    font-weight: 700;
+    padding: 0;
+  }
+
+  :global(.store-badge-unicenter) {
     display: inline-block;
+    background: transparent;
+    border: none;
+    color: #c084fc;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    font-weight: 700;
+    padding: 0;
+  }
+
+  :global(.cell-dni) {
+    font-family: var(--font-display);
+    font-size: 1.18rem;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+  }
+
+  :global(.contact-phone) {
+    font-family: var(--font-display);
+    font-size: 1.08rem;
+    letter-spacing: 0.04em;
+    color: var(--text-primary);
+  }
+
+  :global(.contact-email) {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
   }
 
   :global(.btn-view-ticket) {
@@ -573,6 +613,7 @@ import Layout from "../../layouts/Layout.astro";
     font-family: var(--font-display);
     font-size: 1rem;
     letter-spacing: 0.04em;
+    text-transform: uppercase;
     cursor: pointer;
     min-height: 40px;
     transition: all var(--transition-fast);
@@ -587,7 +628,7 @@ import Layout from "../../layouts/Layout.astro";
   :global(.btn-delete-row) {
     background: transparent;
     border: none;
-    color: #666666;
+    color: #ff4d4f;
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 4px;
@@ -600,8 +641,9 @@ import Layout from "../../layouts/Layout.astro";
   }
 
   :global(.btn-delete-row:hover) {
-    background: rgba(255, 77, 79, 0.15);
-    color: #ff4d4f;
+    background: rgba(255, 77, 79, 0.2);
+    color: #ff7875;
+    transform: scale(1.1);
   }
 
   :global(.notes-input) {
@@ -658,10 +700,13 @@ import Layout from "../../layouts/Layout.astro";
     background: #ffffff;
     color: #000000;
     border: none;
-    padding: 0.6rem 1.25rem;
+    padding: 0.65rem 1.35rem;
     border-radius: var(--radius-md);
     cursor: pointer;
-    font-weight: 600;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   /* Modals */
@@ -692,9 +737,9 @@ import Layout from "../../layouts/Layout.astro";
   .modal-viewer-content {
     position: relative;
     z-index: 10;
-    background: #111111;
-    border: 1.5px solid #333333;
-    border-radius: var(--radius-lg);
+    background: #000000;
+    border: 2px solid #444444;
+    border-radius: var(--radius-md);
     max-width: min(850px, 95vw);
     width: 100%;
     max-height: 90vh;
@@ -714,13 +759,14 @@ import Layout from "../../layouts/Layout.astro";
 
   .modal-viewer-title {
     font-family: var(--font-display);
-    font-size: 1.35rem;
-    letter-spacing: 0.03em;
+    font-size: 1.45rem;
+    letter-spacing: 0.04em;
     color: #ffffff;
+    text-transform: uppercase;
   }
 
   .modal-viewer-sub {
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     color: #888888;
   }
 
@@ -748,7 +794,7 @@ import Layout from "../../layouts/Layout.astro";
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #080808;
+    background: #000000;
     min-height: 380px;
   }
 
@@ -772,6 +818,7 @@ import Layout from "../../layouts/Layout.astro";
     border-top: 1.5px solid #222222;
     display: flex;
     justify-content: flex-end;
+    background: #000000;
   }
 
   .btn-download {
@@ -780,20 +827,22 @@ import Layout from "../../layouts/Layout.astro";
     gap: 0.5rem;
     background: #ffffff;
     color: #000000;
-    padding: 0.65rem 1.25rem;
+    padding: 0.75rem 1.35rem;
     border-radius: var(--radius-md);
     text-decoration: none;
-    font-weight: 600;
-    font-size: 0.92rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   /* Delete Modal */
   .modal-delete-card {
     position: relative;
     z-index: 10;
-    background: #111111;
-    border: 1.5px solid #333333;
-    border-radius: var(--radius-lg);
+    background: #000000;
+    border: 2px solid #444444;
+    border-radius: var(--radius-md);
     max-width: 440px;
     width: 100%;
     padding: 2rem;
@@ -814,8 +863,10 @@ import Layout from "../../layouts/Layout.astro";
 
   .delete-title {
     font-family: var(--font-display);
-    font-size: 1.4rem;
+    font-size: 1.5rem;
+    letter-spacing: 0.04em;
     color: #ffffff;
+    text-transform: uppercase;
     margin-bottom: 0.5rem;
   }
 
@@ -834,12 +885,15 @@ import Layout from "../../layouts/Layout.astro";
   .btn-cancel {
     flex: 1;
     min-height: 48px;
-    background: #1c1c1c;
-    border: 1px solid #444444;
+    background: #111111;
+    border: 2px solid #444444;
     color: #ffffff;
     border-radius: var(--radius-md);
     cursor: pointer;
-    font-weight: 600;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   .btn-confirm-delete {
@@ -850,7 +904,10 @@ import Layout from "../../layouts/Layout.astro";
     color: #ffffff;
     border-radius: var(--radius-md);
     cursor: pointer;
-    font-weight: 600;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   @keyframes spin {
@@ -858,20 +915,37 @@ import Layout from "../../layouts/Layout.astro";
     to { transform: rotate(360deg); }
   }
 
+  /* Responsive Adaptations */
   @media (max-width: 1024px) {
+    .dash-nav-container {
+      padding: 1rem clamp(1rem, 2.5vw, 2rem);
+    }
+
+    .dash-main {
+      padding: 1.5rem clamp(1rem, 2.5vw, 2rem) 3.5rem;
+    }
+
+    .metrics-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
     .toolbar {
       flex-direction: column;
       align-items: stretch;
       gap: 1rem;
     }
+
     .search-box {
       width: 100%;
       min-width: unset;
     }
+
     .filter-group {
       width: 100%;
       justify-content: space-between;
     }
+
     .filter-buttons {
       flex: 1;
       justify-content: flex-end;
@@ -880,34 +954,172 @@ import Layout from "../../layouts/Layout.astro";
 
   @media (max-width: 768px) {
     .dash-nav-container {
-      padding: 0.85rem 1rem;
+      padding: 0.75rem 1rem;
     }
+
+    .dash-logo {
+      height: 28px;
+    }
+
+    .dash-logo-divider {
+      height: 22px;
+    }
+
+    .btn-logout {
+      padding: 0.45rem 0.75rem;
+      font-size: 0.95rem;
+      min-height: 40px;
+    }
+
+    .dash-main {
+      padding: 1.25rem 1rem 3rem;
+    }
+
+    .dash-content-container {
+      gap: 1.25rem;
+    }
+
     .dash-header {
       flex-direction: column;
       align-items: stretch;
       gap: 1rem;
     }
+
+    .dash-title {
+      font-size: 1.65rem;
+    }
+
     .header-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       width: 100%;
-    }
-    .btn-tool {
-      flex: 1;
-      justify-content: center;
-    }
-    .metrics-grid {
-      grid-template-columns: 1fr;
-    }
-    .filter-group {
-      flex-direction: column;
-      align-items: flex-start;
       gap: 0.5rem;
     }
-    .filter-buttons {
+
+    .btn-tool {
       width: 100%;
+      justify-content: center;
+      padding: 0.65rem 0.5rem;
+      font-size: 0.95rem;
+      min-height: 44px;
     }
+
+    .metrics-grid {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .metric-card {
+      padding: 1.15rem 1.25rem;
+    }
+
+    .metric-value {
+      font-size: 2.3rem;
+    }
+
+    .toolbar {
+      padding: 1rem;
+      gap: 0.85rem;
+    }
+
+    .search-input {
+      min-height: 46px;
+      font-size: 0.95rem;
+    }
+
+    .filter-group {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.6rem;
+    }
+
+    .filter-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      width: 100%;
+      gap: 0.35rem;
+    }
+
     .btn-filter {
-      flex: 1;
+      width: 100%;
       text-align: center;
+      padding: 0.5rem 0.25rem;
+      font-size: 0.92rem;
+      min-height: 42px;
+    }
+
+    .dash-table th {
+      padding: 0.95rem 0.85rem;
+      font-size: 0.95rem;
+    }
+
+    :global(.dash-table td) {
+      padding: 0.95rem 0.85rem;
+      font-size: 0.88rem;
+    }
+
+    :global(.btn-view-ticket) {
+      padding: 0.45rem 0.75rem;
+      font-size: 0.88rem;
+      min-height: 36px;
+    }
+
+    .modal-viewer-content {
+      width: 95vw;
+      max-height: 92vh;
+    }
+
+    .modal-viewer-header {
+      padding: 1rem;
+    }
+
+    .modal-viewer-body {
+      padding: 0.75rem;
+      min-height: 240px;
+    }
+
+    :global(.viewer-image) {
+      max-height: 50vh;
+    }
+
+    :global(.viewer-pdf) {
+      height: 50vh;
+    }
+
+    .modal-delete-card {
+      width: 92vw;
+      padding: 1.5rem 1.25rem;
+    }
+
+    .delete-actions {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .dash-brand {
+      gap: 0.6rem;
+    }
+
+    .dash-logo {
+      height: 24px;
+    }
+
+    .dash-logo-divider {
+      height: 18px;
+    }
+
+    .dash-title {
+      font-size: 1.45rem;
+    }
+
+    .btn-logout span {
+      display: none;
+    }
+
+    .btn-logout {
+      padding: 0.45rem 0.55rem;
     }
   }
 </style>
@@ -1071,19 +1283,19 @@ import Layout from "../../layouts/Layout.astro";
               minute: '2-digit',
             });
 
-            const storeClass = reg.tienda === 'malabia' ? 'store-malabia' : 'store-unicenter';
-            const storeLabel = reg.tienda === 'malabia' ? 'Malabia' : 'Unicenter';
+            const storeBadgeClass = reg.tienda === 'malabia' ? 'store-badge-malabia' : 'store-badge-unicenter';
+            const storeLabel = reg.tienda === 'malabia' ? 'MALABIA' : 'UNICENTER';
 
             return `
               <tr data-id="${reg.id}">
                 <td style="white-space: nowrap; color: #888888; font-size: 0.88rem;">${formattedDate}</td>
-                <td><span class="store-tag ${storeClass}">${storeLabel}</span></td>
-                <td style="font-weight: 600; color: #ffffff;">${escapeHtml(reg.nombre)}</td>
-                <td style="font-family: monospace; font-size: 0.95rem;">${escapeHtml(reg.dni)}</td>
+                <td><span class="${storeBadgeClass}">${storeLabel}</span></td>
+                <td style="font-weight: 600; color: #ffffff; font-size: 0.95rem;">${escapeHtml(reg.nombre)}</td>
+                <td class="cell-dni">${escapeHtml(reg.dni)}</td>
                 <td>
-                  <div style="display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.88rem;">
-                    <span>${escapeHtml(reg.telefono)}</span>
-                    <span style="color: #888888;">${escapeHtml(reg.email)}</span>
+                  <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                    <span class="contact-phone">${escapeHtml(reg.telefono)}</span>
+                    <span class="contact-email">${escapeHtml(reg.email)}</span>
                   </div>
                 </td>
                 <td>
@@ -1092,7 +1304,7 @@ import Layout from "../../layouts/Layout.astro";
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                       <circle cx="12" cy="12" r="3"></circle>
                     </svg>
-                    <span>Ver Ticket</span>
+                    <span>VER TICKET</span>
                   </button>
                 </td>
                 <td>

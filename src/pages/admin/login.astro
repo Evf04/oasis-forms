@@ -99,7 +99,7 @@ import Layout from "../../layouts/Layout.astro";
   </main>
 </Layout>
 
-<style>
+<style lang="scss">
   .main-content {
     width: 100%;
     min-height: 100vh;
@@ -108,90 +108,83 @@ import Layout from "../../layouts/Layout.astro";
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    padding-top: clamp(0.75rem, 2vw, 1.5rem);
-    padding-bottom: clamp(2.5rem, 6vw, 5rem);
+    justify-content: center;
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);
+    background-color: #000000;
   }
 
   .campaign-wrapper {
     width: 100%;
-    max-width: 1080px;
+    max-width: 480px;
     margin: 0 auto;
-    padding: 0 clamp(1rem, 3.5vw, 2rem);
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
   }
 
-  /* Top Brand Logos Banner - Fluid scaling matching main page */
+  /* Top Brand Logos Banner */
   .top-logos-banner {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: clamp(1.25rem, 4vw, 4.5rem);
-    padding: clamp(1.5rem, 4vw, 4.5rem) 0.5rem clamp(2rem, 5vw, 4.5rem);
-  }
+    gap: clamp(1.75rem, 6vw, 3.5rem);
+    padding: 0 0 clamp(2.25rem, 5.5vw, 3.5rem);
 
-  .logo-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 1;
-  }
-
-  .brand-logo-img {
-    height: auto;
-    object-fit: contain;
-    display: block;
-    max-width: 100%;
-    transition: transform var(--transition-normal);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .brand-logo-img:hover {
-      transform: scale(1.03);
+    .logo-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 1;
     }
-  }
 
-  .adidas-logo {
-    width: clamp(80px, 17vw, 230px);
-  }
+    .brand-logo-img {
+      height: auto;
+      object-fit: contain;
+      display: block;
+      max-width: 100%;
+    }
 
-  .oasis-logo {
-    width: clamp(125px, 26.5vw, 360px);
-  }
+    .adidas-logo {
+      width: clamp(80px, 19vw, 140px);
+    }
 
-  .logo-divider {
-    width: clamp(3.5px, 0.38vw, 5px);
-    height: clamp(56px, 12vw, 163px);
-    background-color: #ffffff;
-    opacity: 1;
-    flex-shrink: 0;
+    .oasis-logo {
+      width: clamp(125px, 30vw, 220px);
+    }
+
+    .logo-divider {
+      width: clamp(3px, 0.4vw, 4.5px);
+      height: clamp(52px, 12vw, 90px);
+      background-color: #ffffff;
+      opacity: 1;
+      flex-shrink: 0;
+    }
   }
 
   /* Login Section Form */
   .form-section {
     width: 100%;
-    margin-bottom: clamp(2rem, 4.5vw, 3.5rem);
   }
 
   .login-card-container {
-    max-width: 560px;
+    width: 100%;
     margin: 0 auto;
   }
 
   .section-title-wrap {
     text-align: center;
-    margin-bottom: clamp(1.25rem, 3vw, 1.85rem);
-  }
+    margin-bottom: clamp(1.75rem, 4.5vw, 2.5rem);
 
-  .section-title {
-    font-family: var(--font-display);
-    font-size: clamp(1.35rem, 3vw, 1.85rem);
-    letter-spacing: 0.03em;
-    color: var(--text-primary);
-    text-transform: uppercase;
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.65rem, 4vw, 2.2rem);
+      letter-spacing: 0.04em;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
   }
 
   .main-form {
@@ -203,54 +196,54 @@ import Layout from "../../layouts/Layout.astro";
   .login-inputs-grid {
     display: flex;
     flex-direction: column;
-    gap: clamp(1.15rem, 2.5vw, 1.5rem);
+    gap: clamp(1.15rem, 2.5vw, 1.45rem);
     width: 100%;
   }
 
   .form-group {
     display: flex;
     flex-direction: column;
-    gap: 0.55rem;
+    gap: 0.5rem;
     width: 100%;
-  }
 
-  .form-label {
-    font-family: var(--font-display);
-    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-    letter-spacing: 0.03em;
-    color: var(--text-primary);
-    text-transform: uppercase;
+    .form-label {
+      font-family: var(--font-display);
+      font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+      letter-spacing: 0.04em;
+      color: var(--text-primary);
+      text-transform: uppercase;
+    }
   }
 
   .form-input {
     width: 100%;
     background-color: #000000;
-    border: 2.5px solid #777777;
+    border: 2.5px solid #555555;
     border-radius: var(--radius-md);
-    padding: 0.95rem 1.15rem;
-    min-height: 56px;
-    font-size: 1.05rem;
+    padding: 0.9rem 1.15rem;
+    min-height: 54px;
+    font-size: 1rem;
     color: var(--text-primary);
     transition: all var(--transition-fast);
-  }
 
-  .form-input::placeholder {
-    color: #888888;
-    font-family: var(--font-sans);
-    font-size: 0.98rem;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .form-input:hover {
-      border-color: #bbbbbb;
+    &::placeholder {
+      color: #888888;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
     }
-  }
 
-  .form-input:focus {
-    border-color: var(--accent-white);
-    background-color: #000000;
-    box-shadow: 0 0 0 1.5px var(--accent-white);
-    outline: none;
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        border-color: #888888;
+      }
+    }
+
+    &:focus {
+      border-color: var(--accent-white);
+      background-color: #000000;
+      box-shadow: 0 0 0 1.5px var(--accent-white);
+      outline: none;
+    }
   }
 
   .password-wrapper {
@@ -258,31 +251,31 @@ import Layout from "../../layouts/Layout.astro";
     display: flex;
     align-items: center;
     width: 100%;
-  }
 
-  .password-wrapper .form-input {
-    padding-right: 3.5rem;
-  }
+    .form-input {
+      padding-right: 3.5rem;
+    }
 
-  .btn-toggle-password {
-    position: absolute;
-    right: 0.85rem;
-    background: transparent;
-    border: none;
-    color: #888888;
-    cursor: pointer;
-    min-width: var(--min-touch-target);
-    min-height: var(--min-touch-target);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    transition: color var(--transition-fast);
-  }
+    .btn-toggle-password {
+      position: absolute;
+      right: 0.85rem;
+      background: transparent;
+      border: none;
+      color: #888888;
+      cursor: pointer;
+      min-width: var(--min-touch-target);
+      min-height: var(--min-touch-target);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: color var(--transition-fast);
 
-  @media (hover: hover) and (pointer: fine) {
-    .btn-toggle-password:hover {
-      color: #ffffff;
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          color: #ffffff;
+        }
+      }
     }
   }
 
@@ -291,13 +284,6 @@ import Layout from "../../layouts/Layout.astro";
     text-align: center;
     margin: 0 0 0.75rem 0;
     animation: shake 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-  }
-
-  @keyframes shake {
-    10%, 90% { transform: translate3d(-1px, 0, 0); }
-    20%, 80% { transform: translate3d(2px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
-    40%, 60% { transform: translate3d(3px, 0, 0); }
   }
 
   .error-text {
@@ -327,37 +313,84 @@ import Layout from "../../layouts/Layout.astro";
     border: none;
     border-radius: var(--radius-md);
     min-height: 56px;
-    padding: 1.15rem clamp(2.5rem, 6vw, 4.5rem);
+    padding: 1.1rem 2rem;
     font-family: var(--font-display);
-    font-size: clamp(1.15rem, 2.2vw, 1.35rem);
+    font-size: clamp(1.2rem, 2.5vw, 1.4rem);
     letter-spacing: 0.04em;
     cursor: pointer;
     transition: all var(--transition-normal);
     box-shadow: 0 4px 24px rgba(255, 255, 255, 0.18);
     width: 100%;
-  }
 
-  @media (hover: hover) and (pointer: fine) {
-    .btn-submit:hover {
-      background-color: #e5e5e5;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(255, 255, 255, 0.3);
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        background-color: #e5e5e5;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 32px rgba(255, 255, 255, 0.3);
+      }
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
     }
   }
 
-  .btn-submit:active {
-    transform: scale(0.98);
-  }
-
-  .btn-submit:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-    pointer-events: none;
+  @keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+    40%, 60% { transform: translate3d(3px, 0, 0); }
   }
 
   @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+  }
+
+  // --- Responsive Media Queries ---
+  @media (max-width: 768px) {
+    .main-content {
+      justify-content: center;
+      padding: 1.5rem 1rem;
+    }
+
+    .top-logos-banner {
+      padding: 0 0 2rem;
+      gap: 1.85rem;
+    }
+
+    .form-input {
+      min-height: 52px;
+      padding: 0.85rem 1rem;
+      font-size: 1rem;
+    }
+
+    .btn-submit {
+      min-height: 52px;
+      padding: 0.95rem 1.5rem;
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .main-content {
+      padding: 1.25rem 0.85rem;
+    }
+
+    .top-logos-banner {
+      gap: 1.6rem;
+      padding: 0 0 1.85rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+    }
   }
 </style>
 
